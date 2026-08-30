@@ -429,4 +429,4 @@ Possible extensions for a later version:
 - implied volatility
 - stochastic volatility
 
-For V1, I want to keep the project focused on the basic pricing framework, Monte Carlo convergence, error measurement, and one simple variance reduction method.
+For V1, I want to keep the project focused on the basic pricing framework, Monte Carlo convergence, error measurement, and one simple variance reduction method. 

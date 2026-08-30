@@ -6,7 +6,7 @@ from monte_carlo import monte_carlo_call, monte_carlo_call_antithetic
 def call_payoff(S_T, K):
     """
     Calculate the payoff of a European call option.
-
+ 
     Parameters:
         S_T: Stock price at maturity (could possibly be 0)
         K: Strike price

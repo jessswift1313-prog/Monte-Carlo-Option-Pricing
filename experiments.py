@@ -9,7 +9,7 @@ def test_payoff():
     assert call_payoff(100, 100) == 0
     assert call_payoff(120, 100) == 20
 
-
+ 
 def test_bs_call_standard():
     C_BS = black_scholes_call(
         S_0 = 100,

@@ -10,7 +10,7 @@ def compare_mc_with_bs():
         T = 1.0,
     )
     print(f"Black-Scholes call price: {C_BS : .6f}")
-
+ 
     for i in range(2, 7):
         C_0, standard_error, ci_low, ci_high = monte_carlo_call(
             S_0 = 100,

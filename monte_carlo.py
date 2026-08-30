@@ -98,7 +98,7 @@ def monte_carlo_call_antithetic(S_0, K, r, sigma, T, n_paths, seed = None):
     payoff2 = np.maximum(S_T2 - K, 0)
     discounted_payoff = np.exp(-r * T) * (payoff1+payoff2)/2
     price = np.mean(discounted_payoff)
-
+ 
     standard_error = np.std(discounted_payoff, ddof = 1) / np.sqrt(n_paths) # Here we use sample standard deviation to replace `sigma_X`
 
     ci_low = price - 1.96 * standard_error

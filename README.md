@@ -234,4 +234,4 @@ Possible extensions include:
 - market-data inputs;
 - stochastic-volatility models.
 
-V1 deliberately keeps the scope narrow. The objective is to demonstrate a complete numerical-pricing workflow and understand the statistical behaviour of the estimator before introducing more complex models or products.
+V1 deliberately keeps the scope narrow. The objective is to demonstrate a complete numerical-pricing workflow and understand the statistical behaviour of the estimator before introducing more complex models or products. 
