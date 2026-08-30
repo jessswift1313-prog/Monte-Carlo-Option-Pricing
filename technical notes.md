@@ -9,13 +9,13 @@ A European call gives the holder the right to buy the underlying asset at maturi
 The payoff at maturity is
 
 $$
-(S_T-K)^+ = \max(S_T-K,0).
+(S_T - K)^+ = \max(S_T - K, 0).
 $$
 
 So:
 
 - if $S_T \le K$, the payoff is 0;
-- if $S_T > K$, the payoff is $S_T-K$.
+- if $S_T > K$, the payoff is $S_T - K$.
 
 The payoff at maturity is not the option price today. Since the payoff is received at time $T$, it has to be discounted back to time 0.
 
@@ -42,7 +42,7 @@ today.
 Under risk-neutral pricing,
 
 $$
-C_0 = e^{-rT}\mathbb{E}^{\mathbb{Q}}[(S_T-K)^+].
+C_0 = e^{-rT} \mathbb{E}^{\mathbb{Q}}[(S_T - K)^+].
 $$
 
 The expectation is taken under the risk-neutral measure $\mathbb{Q}$.
@@ -56,20 +56,13 @@ This is why I do not simulate the stock using a historical expected return and t
 Under the Black–Scholes model, the stock follows geometric Brownian motion:
 
 $$
-dS_t = rS_t\,dt + \sigma S_t\,dW_t.
+dS_t = rS_t \, dt + \sigma S_t \, dW_t.
 $$
 
 For this project I only need the stock price at maturity. The exact terminal solution is
 
 $$
-S_T =
-S_0
-\exp\left(
-\left(r-\frac{1}{2}\sigma^2\right)T
-+\sigma\sqrt{T}Z
-\right),
-\qquad
-Z\sim N(0,1).
+S_T = S_0 \exp\left(\left(r - \frac{1}{2}\sigma^2\right)T + \sigma\sqrt{T}Z\right), \qquad Z \sim N(0,1).
 $$
 
 This is enough for a European call because the payoff only depends on $S_T$. I do not need to simulate the whole stock path between 0 and $T$.
@@ -92,24 +85,19 @@ The $-\frac{1}{2}\sigma^2$ term comes from applying Itô's lemma to $\log S_t$.
 For a European call,
 
 $$
-C_{BS} = S_0\Phi(d_1)-Ke^{-rT}\Phi(d_2),
+C_{BS} = S_0\Phi(d_1) - Ke^{-rT}\Phi(d_2),
 $$
 
 where
 
 $$
-d_1 =
-\frac{
-\ln(S_0/K)+\left(r+\frac{1}{2}\sigma^2\right)T
-}{
-\sigma\sqrt{T}
-},
+d_1 = \frac{\ln(S_0 / K) + \left(r + \frac{1}{2}\sigma^2\right)T}{\sigma\sqrt{T}},
 $$
 
 and
 
 $$
-d_2 = d_1-\sigma\sqrt{T}.
+d_2 = d_1 - \sigma\sqrt{T}.
 $$
 
 I mainly use Black–Scholes as a benchmark.
@@ -129,32 +117,25 @@ So throughout the project I keep **numerical error** and **model error** separat
 Generate independent normal random variables
 
 $$
-Z_1,\ldots,Z_N \sim N(0,1).
+Z_1, \ldots, Z_N \sim N(0,1).
 $$
 
 For each draw,
 
 $$
-S_T^{(i)} =
-S_0
-\exp\left(
-\left(r-\frac{1}{2}\sigma^2\right)T
-+\sigma\sqrt{T}Z_i
-\right).
+S_T^{(i)} = S_0 \exp\left(\left(r - \frac{1}{2}\sigma^2\right)T + \sigma\sqrt{T}Z_i\right).
 $$
 
 Then calculate the discounted payoff
 
 $$
-Y_i = e^{-rT}(S_T^{(i)}-K)^+.
+Y_i = e^{-rT}(S_T^{(i)} - K)^+.
 $$
 
 The Monte Carlo estimate is the sample mean:
 
 $$
-\hat{C}_N =
-\frac{1}{N}
-\sum_{i=1}^{N}Y_i.
+\hat{C}_N = \frac{1}{N}\sum_{i=1}^{N}Y_i.
 $$
 
 Since each $Y_i$ has the correct discounted payoff distribution,
@@ -172,23 +153,19 @@ So the estimator is unbiased under the model.
 Suppose
 
 $$
-\mathrm{Var}(Y_i)=\sigma_Y^2.
+\mathrm{Var}(Y_i) = \sigma_Y^2.
 $$
 
 Since $\hat{C}_N$ is the average of $N$ independent observations,
 
 $$
-\mathrm{Var}(\hat{C}_N)
-=
-\frac{\sigma_Y^2}{N}.
+\mathrm{Var}(\hat{C}_N) = \frac{\sigma_Y^2}{N}.
 $$
 
 Therefore,
 
 $$
-\mathrm{SE}(\hat{C}_N)
-=
-\frac{\sigma_Y}{\sqrt{N}}.
+\mathrm{SE}(\hat{C}_N) = \frac{\sigma_Y}{\sqrt{N}}.
 $$
 
 In practice, $\sigma_Y$ is unknown, so I estimate it using the sample standard deviation of the simulated discounted payoffs.
@@ -196,9 +173,7 @@ In practice, $\sigma_Y$ is unknown, so I estimate it using the sample standard d
 For a large number of paths, I use the approximate 95% confidence interval
 
 $$
-\hat{C}_N
-\pm
-1.96\,\widehat{\mathrm{SE}}(\hat{C}_N).
+\hat{C}_N \pm 1.96 \, \widehat{\mathrm{SE}}(\hat{C}_N).
 $$
 
 This confidence interval only measures Monte Carlo sampling uncertainty.
@@ -212,37 +187,25 @@ It is not a confidence interval for the real market value of the option. The pri
 From
 
 $$
-\mathrm{Var}(\hat{C}_N)
-=
-\frac{\sigma_Y^2}{N},
+\mathrm{Var}(\hat{C}_N) = \frac{\sigma_Y^2}{N},
 $$
 
 we get
 
 $$
-\mathrm{SE}(\hat{C}_N)
-=
-O(N^{-1/2}).
+\mathrm{SE}(\hat{C}_N) = O(N^{-1/2}).
 $$
 
 For an unbiased estimator,
 
 $$
-\mathrm{MSE}
-=
-\mathrm{Var}(\hat{C}_N)
-+
-\mathrm{Bias}(\hat{C}_N)^2
-=
-\mathrm{Var}(\hat{C}_N).
+\mathrm{MSE} = \mathrm{Var}(\hat{C}_N) + \mathrm{Bias}(\hat{C}_N)^2 = \mathrm{Var}(\hat{C}_N).
 $$
 
 Therefore,
 
 $$
-\mathrm{RMSE}
-=
-O(N^{-1/2}).
+\mathrm{RMSE} = O(N^{-1/2}).
 $$
 
 So on a log-log plot of RMSE against $N$, I expect a slope close to $-1/2$.
@@ -272,7 +235,7 @@ This shows whether the estimates are centered near the Black–Scholes benchmark
 Suppose the repeated estimates are
 
 $$
-\hat{C}_N^{(1)},\ldots,\hat{C}_N^{(R)}.
+\hat{C}_N^{(1)}, \ldots, \hat{C}_N^{(R)}.
 $$
 
 Their sample variance measures how much the estimator changes from one independent run to another.
@@ -280,15 +243,7 @@ Their sample variance measures how much the estimator changes from one independe
 ### RMSE
 
 $$
-\mathrm{RMSE}
-=
-\sqrt{
-\frac{1}{R}
-\sum_{j=1}^{R}
-\left(
-\hat{C}_N^{(j)}-C_{BS}
-\right)^2
-}.
+\mathrm{RMSE} = \sqrt{\frac{1}{R}\sum_{j=1}^{R}\left(\hat{C}_N^{(j)} - C_{BS}\right)^2}.
 $$
 
 Since the Black–Scholes value is known, this gives a direct measure of numerical error.
@@ -308,25 +263,13 @@ Instead of generating two unrelated normal shocks, I generate $Z$ and pair it wi
 The corresponding terminal prices are
 
 $$
-S_T^+(Z)
-=
-S_0
-\exp\left(
-\left(r-\frac{1}{2}\sigma^2\right)T
-+\sigma\sqrt{T}Z
-\right),
+S_T^+(Z) = S_0 \exp\left(\left(r - \frac{1}{2}\sigma^2\right)T + \sigma\sqrt{T}Z\right),
 $$
 
 and
 
 $$
-S_T^-(Z)
-=
-S_0
-\exp\left(
-\left(r-\frac{1}{2}\sigma^2\right)T
--\sigma\sqrt{T}Z
-\right).
+S_T^-(Z) = S_0 \exp\left(\left(r - \frac{1}{2}\sigma^2\right)T - \sigma\sqrt{T}Z\right).
 $$
 
 Let their discounted call payoffs be $Y(Z)$ and $Y(-Z)$.
@@ -334,23 +277,13 @@ Let their discounted call payoffs be $Y(Z)$ and $Y(-Z)$.
 I use the pair average
 
 $$
-A =
-\frac{Y(Z)+Y(-Z)}{2}.
+A = \frac{Y(Z) + Y(-Z)}{2}.
 $$
 
 Since $Z$ and $-Z$ have the same $N(0,1)$ distribution,
 
 $$
-\mathbb{E}[A]
-=
-\frac{1}{2}
-\left(
-\mathbb{E}[Y(Z)]
-+
-\mathbb{E}[Y(-Z)]
-\right)
-=
-C_0.
+\mathbb{E}[A] = \frac{1}{2}\left(\mathbb{E}[Y(Z)] + \mathbb{E}[Y(-Z)]\right) = C_0.
 $$
 
 So the expected value does not change.
@@ -358,16 +291,7 @@ So the expected value does not change.
 The variance of the pair average is
 
 $$
-\mathrm{Var}(A)
-=
-\frac{1}{4}
-\left[
-\mathrm{Var}(Y(Z))
-+
-\mathrm{Var}(Y(-Z))
-+
-2\mathrm{Cov}(Y(Z),Y(-Z))
-\right].
+\mathrm{Var}(A) = \frac{1}{4}\left[\mathrm{Var}(Y(Z)) + \mathrm{Var}(Y(-Z)) + 2\mathrm{Cov}(Y(Z), Y(-Z))\right].
 $$
 
 The important part is the covariance term.
@@ -389,15 +313,13 @@ This is an important implementation detail.
 The quantity I want to estimate is
 
 $$
-\mathbb{E}[(S_T-K)^+].
+\mathbb{E}[(S_T - K)^+].
 $$
 
 So with antithetic sampling I need to calculate both payoffs first and then average them:
 
 $$
-\frac{
-f(S_T^+)+f(S_T^-)
-}{2}.
+\frac{f(S_T^+) + f(S_T^-)}{2}.
 $$
 
 I should not average the two stock prices first and then apply the payoff function.
@@ -405,19 +327,13 @@ I should not average the two stock prices first and then apply the payoff functi
 In general,
 
 $$
-\frac{
-f(S_T^+)+f(S_T^-)
-}{2}
-\neq
-f\left(
-\frac{S_T^++S_T^-}{2}
-\right).
+\frac{f(S_T^+) + f(S_T^-)}{2} \neq f\left(\frac{S_T^+ + S_T^-}{2}\right).
 $$
 
 For a European call,
 
 $$
-f(S_T)=\max(S_T-K,0),
+f(S_T) = \max(S_T - K, 0),
 $$
 
 which is nonlinear.
@@ -441,12 +357,7 @@ For a fixed target path budget, I compare:
 The variance reduction statistic is
 
 $$
-1-
-\frac{
-\widehat{\mathrm{Var}}(\hat{C}_{anti})
-}{
-\widehat{\mathrm{Var}}(\hat{C}_{standard})
-}.
+1 - \frac{\widehat{\mathrm{Var}}(\hat{C}_{anti})}{\widehat{\mathrm{Var}}(\hat{C}_{standard})}.
 $$
 
 For example, a value of $0.68$ means that the observed estimator variance is about 68% lower for the antithetic estimator in that experiment.
