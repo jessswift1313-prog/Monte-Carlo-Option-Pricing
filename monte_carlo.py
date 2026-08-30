@@ -33,11 +33,10 @@ def monte_carlo_call(S_0, K, r, sigma, T, n_paths, seed = None):
         raise ValueError("Time to maturity should be strictly positive.")
 
     if not isinstance(n_paths, int) or n_paths <= 0:
-        raise ValueError("The number of simulation paths should be should be a positive integer.")
+        raise ValueError("The number of simulation paths should be a positive integer.")
 
     rng = np.random.default_rng(seed)
 
-    # Z = rng.normal(loc = 0, scale = 1, size = n_paths)
     Z = rng.standard_normal(size = n_paths)
     S_T = S_0 * np.exp((r-0.5*sigma**2)*T + sigma*np.sqrt(T)*Z) 
 
@@ -69,7 +68,7 @@ def monte_carlo_call_antithetic(S_0, K, r, sigma, T, n_paths, seed = None):
 
     Returns:
         price: Monte carlo call option price
-        standard_error: The standatd error of this simulation
+        standard_error: The standard error of this simulation
         ci_low: Lower bound of a confidence interval(CI)
         ci_high: Upper bound of a confidence interval(CI) 
     '''
@@ -91,7 +90,7 @@ def monte_carlo_call_antithetic(S_0, K, r, sigma, T, n_paths, seed = None):
     rng = np.random.default_rng(seed)
 
     # Z = rng.normal(loc = 0, scale = 1, size = n_paths)
-    Z = rng.standard_normal(size = n_paths)
+    Z = rng.standard_normal(size = n_paths // 2)
     S_T1 = S_0 * np.exp((r-0.5*sigma**2)*T + sigma*np.sqrt(T)*Z)
     S_T2 = S_0 * np.exp((r-0.5*sigma**2)*T + sigma*np.sqrt(T)*(-Z)) 
 
