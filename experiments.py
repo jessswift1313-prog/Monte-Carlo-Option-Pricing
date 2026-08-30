@@ -9,7 +9,7 @@ def test_payoff():
     assert call_payoff(100, 100) == 0
     assert call_payoff(120, 100) == 20
 
- 
+
 def test_bs_call_standard():
     C_BS = black_scholes_call(
         S_0 = 100,
@@ -141,7 +141,7 @@ def repeated_convergence_experiment(pricing_function, output_option = True):
         )
         
         fig.tight_layout() 
-        fig.savefig("convergence.png", dpi=300) 
+        fig.savefig("figures/convergence.png", dpi=300) 
 
     return results
 
@@ -210,7 +210,7 @@ def variance_reduction_experiment():
     ax.grid(True, axis="y", alpha = 0.3)
 
     fig.tight_layout()
-    fig.savefig("variance_comparison.png", dpi=300)
+    fig.savefig("figures/variance_comparison.png", dpi=300)
 
 
 def main():
