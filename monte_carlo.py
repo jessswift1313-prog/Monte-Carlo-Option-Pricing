@@ -87,19 +87,21 @@ def monte_carlo_call_antithetic(S_0, K, r, sigma, T, n_paths, seed = None):
     if not isinstance(n_paths, int) or n_paths <= 0:
         raise ValueError("The number of simulation paths should be should be a positive integer.")
 
+    if n_paths % 2 != 0:
+        raise ValueError("n_paths must be even for antithetic sampling.")
+        
     rng = np.random.default_rng(seed)
 
-    # Z = rng.normal(loc = 0, scale = 1, size = n_paths)
     Z = rng.standard_normal(size = n_paths // 2)
     S_T1 = S_0 * np.exp((r-0.5*sigma**2)*T + sigma*np.sqrt(T)*Z)
     S_T2 = S_0 * np.exp((r-0.5*sigma**2)*T + sigma*np.sqrt(T)*(-Z)) 
 
     payoff1 = np.maximum(S_T1 - K, 0)
     payoff2 = np.maximum(S_T2 - K, 0)
-    discounted_payoff = np.exp(-r * T) * (payoff1+payoff2)/2
+    discounted_payoff = np.exp(-r*T) * (payoff1+payoff2)/2
     price = np.mean(discounted_payoff)
  
-    standard_error = np.std(discounted_payoff, ddof = 1) / np.sqrt(n_paths) # Here we use sample standard deviation to replace `sigma_X`
+    standard_error = np.std(discounted_payoff, ddof = 1) / np.sqrt(n_paths // 2) # Here we use sample standard deviation to replace `sigma_X`
 
     ci_low = price - 1.96 * standard_error
     ci_high = price + 1.96 * standard_error # Because approximately in normal distribution:
